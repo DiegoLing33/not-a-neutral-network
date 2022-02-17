@@ -1,0 +1,29 @@
+{
+  "name": "sometest",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "build": "tsc",
+    "build-web": "rollup -c",
+    "dev": "rollup -c -w",
+    "server": "ts-node src/server/index.ts"
+  },
+  "dependencies": {
+    "@ling.black/log": "^1.0.0",
+    "@types/node": "^15.0.2",
+    "express": "4",
+    "md5": "^2.3.0",
+    "rollup": "^2.47.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "rollup-plugin-visualizer": "^5.5.0",
+    "rollup-watch": "^4.3.1",
+    "socket.io": "^4.0.2",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
+  },
+  "devDependencies": {
+    "rollup-plugin-size-snapshot": "^0.12.0",
+    "rollup-plugin-terser": "^7.0.2"
+  }
+}
