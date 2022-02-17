@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="auto.js"></script>
+    <script src="app.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <title>NN VSA</title>
+</head>
+<body>
+<div id="message">
+    <h5 class="d-block">Connecting...</h5>
+    <div class="spinner-border d-block my-5" role="status">
+    </div>
+</div>
+<div id="training" style="display: none">
+    <h5 class="d-block">Training...</h5>
+    <div class="spinner-border d-block my-5" role="status">
+    </div>
+</div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Training</h5>
+                    <p class="card-text">
+                        Press this button to start the training
+                    </p>
+
+                    <button id="train" class="btn btn-primary btn-block w-100">Start training</button>
+                </div>
+                <div class="card-footer text-muted">
+                    <div class="progress">
+                        <div class="progress-bar" id="trainingBar" role="progressbar"></div>
+                    </div>
+                    <div>
+                        <small id="progress">Progress: 0 / 0</small>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Training data</h5>
+                    <p class="card-text">
+                        Draw something like buttons in this card and press it
+                    </p>
+
+                    <div class="btn-group w-100" style="display: none" role="group" id="smiles">
+                    </div>
+
+                    <div class="autocomplete" style="width: 100%">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="typeInput" placeholder="Recipient's username"
+                                   aria-label="Recipient's username" aria-describedby="button-addon2">
+                            <button  class="btn btn-outline-primary" type="button" id="button-select">Select</button>
+                        </div>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush" id="types_list">
+                    <!--                    <li class="list-group-item">An item</li>-->
+                </ul>
+            </div>
+        </div>
+        <div class="col">
+            <div id="wrapper">
+                <canvas width="400" height="400" id="paintField"></canvas>
+                <div id="controls">
+                    <button class="btn btn-secondary w-100" id="clear">
+                        Clear
+                    </button>
+                </div>
+                <div id="alert" class="alert alert-success mt-3 text-center">
+                    Press <b>Predict</b> to make me work
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Predict</h5>
+                    <p class="card-text">
+                        Draw something then click this button
+                    </p>
+                    <button class="btn btn-primary btn-block w-100" id="predict">Predict</button>
+                </div>
+                <ul class="list-group list-group-flush" id="results_list">
+                    <!--                    <li class="list-group-item">An item</li>-->
+                </ul>
+            </div>
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Users</h5>
+                </div>
+                <ul class="list-group list-group-flush" id="users">
+                    <!--                    <li class="list-group-item">An item</li>-->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+
+<style>
+    #training,
+    #message {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: white;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    #wrapper {
+        width: 400px;
+    }
+
+    #paintField {
+        height: 400px;
+        width: 100%;
+        border: 1px solid black;
+    }
+
+    #controls {
+        display: grid;
+        grid-gap: 10px;
+        grid-template-columns: 1fr 1fr;
+        margin-top: 30px;
+    }
+
+    #clear, #train, #predict {
+        grid-column: 1 / -1;
+    }
+
+    .control {
+        font-size: 20px;
+        padding: 4px;
+        cursor: pointer;
+    }
+
+    .autocomplete {
+        /*the container must be positioned relative:*/
+        position: relative;
+        display: inline-block;
+    }
+
+    .autocomplete-items {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        /*position the autocomplete items to be the same width as the container:*/
+        top: 100%;
+        left: 0;
+        right: 0;
+    }
+
+    .autocomplete-items div {
+        padding: 10px;
+        cursor: pointer;
+        background-color: #fff;
+        border-bottom: 1px solid #d4d4d4;
+    }
+
+    .autocomplete-items div:hover {
+        /*when hovering an item:*/
+        background-color: #e9e9e9;
+    }
+
+    .autocomplete-active {
+        /*when navigating through the items using the arrow keys:*/
+        background-color: DodgerBlue !important;
+        color: #ffffff;
+    }
+</style>
+
+<script>
+
+</script>
+</html>
