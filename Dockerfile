@@ -1,4 +1,4 @@
-FROM node:15.10.0-alpine
+FROM node:16-alpine
 WORKDIR /home/node/app
 
 # Installing dependencies
