@@ -1,4 +1,4 @@
-FROM node:15.10.0-alpinekk
+FROM node:15.10.0-alpine
 WORKDIR /home/node/app
 
 # Installing dependencies
